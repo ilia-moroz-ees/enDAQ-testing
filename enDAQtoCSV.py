@@ -7,29 +7,18 @@ import time
 import os
 import sys
 
-try:
-    device = endaq.device.getDevices()[0] 
-except IndexError:
-    print("no device found")
-    sys.exit()
-path = os.path.join(device.path, "DATA\\RECORD")
 
-interface = endaq.device.command_interfaces.CommandInterface(device)
+# Check if the user provided a filename
+if len(sys.argv) < 2:
+    print("Usage: python script.py <path_to_file>")
+    sys.exit(1)
 
-device.startRecording()
+filename = sys.argv[1]
 
-print("Recording Started!")
 
-while len(endaq.device.getDevices()) == 0:
-    print("waiting to finish recording")
-    time.sleep(1)
+path = filename
 
-print(endaq.device.getDevices())
-
-newfile = os.listdir(path)[-1]
-newfile = os.path.join(path, newfile)
-
-doc = endaq.ide.get_doc(newfile)
+doc = endaq.ide.get_doc(path)
 
 # Get All Data
 data = {doc.channels[ch].name : endaq.ide.to_pandas(doc.channels[ch], time_mode='seconds') for ch in doc.channels}
@@ -48,6 +37,8 @@ try:
 except PermissionError:
     print("file is opened. Cannot override the file")
     sys.exit()
+
+print("generated 25g.csv and 40g.csv files")
 
 # Get Dashboard of All Channels
 dashboard = endaq.plot.dashboards.rolling_enveloped_dashboard(
