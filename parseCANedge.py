@@ -154,10 +154,8 @@ if __name__ == '__main__':
 
     source_folder = sys.argv[1]
 
-    # Default DBC path if not provided
-    default_dbc_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'dbc', 'snow_leopard_gen2_windows.dbc')
-
     # Check if the second argument (dbc_file) is provided
-    dbc_file = sys.argv[2] if len(sys.argv) > 2 else default_dbc_path
+
+    dbc_file = sys.argv[2]
 
     combine_and_decode_mf4(source_folder, dbc_file)
