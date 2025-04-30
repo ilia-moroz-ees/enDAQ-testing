@@ -5,8 +5,8 @@ In an empty folder run
 git clone https://github.com/ilia-moroz-ees/enDAQ-testing.git
 ```
 
-Folder "samples" contains sample data from CanEdge in 00000006\00000001.MF4, use parseCANedge.py to convert to CSV <br/> 
-bobby_000056.IDE is an output file from enDAQ, use enDAQtoCSV.py to convert to CSV
+Folder "samples" contains sample data from CanEdge in 00000006\00000001.MF4, **use parseCANedge.py to convert to CSV** <br/> 
+bobby_000056.IDE is an output file from enDAQ, **use enDAQtoCSV.py to convert to CSV**
 
 If there is a ModuleNotFoundError when running these scripts, run these lines in order:
 ```bash
@@ -14,7 +14,7 @@ python -m venv venv
 .venv\Scrpits\activate
 pip install -r requirements.txt
 ```
-
+-----
 ### `enDAQtoCSV.py`
 
 Converts enDAQ IDE files to CSV format.
@@ -30,7 +30,7 @@ Example:
 ```bash
 python enDAQtoCSV.py samples\bobby_000056.IDE
 ```
-
+-----
 ### `canEdgeTesting.py`
 
 Sends commands to the CANedge using PCAN transmitter
@@ -40,7 +40,7 @@ Usage:
 ```bash
 python canEdge_testing.py
 ```
-
+-----
 ### `parseCANedge.py`
 
 Converts MF4 files to CSV format.
