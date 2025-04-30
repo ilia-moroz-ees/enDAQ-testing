@@ -8,7 +8,7 @@ import os
 import sys
 
 try:
-    device = endaq.device.getDevices()[0]
+    device = endaq.device.getDevices()[0] 
 except IndexError:
     print("no device found")
     sys.exit()
@@ -34,12 +34,8 @@ doc = endaq.ide.get_doc(newfile)
 # Get All Data
 data = {doc.channels[ch].name : endaq.ide.to_pandas(doc.channels[ch], time_mode='seconds') for ch in doc.channels}
 
-#frame = pd.DataFrame(data, index = [0])
-
 frames = [endaq.ide.to_pandas(doc.channels[ch], time_mode='seconds') for ch in doc.channels]
 
-
-files = [f for f in os.listdir('.') if os.path.isfile(f)]
 
 try:
     frames[0].to_csv("25g.csv")
