@@ -71,13 +71,13 @@ def rename_csv_files(folder_path):
             os.rename(csv_file_path, new_path)
             print(f"Renamed '{csv_file}' to '{new_name}'")
             
-def combine_and_decode_mf4(source_folder, dbc_path):
+def combine_and_decode_mf4(source_folder, dbc_paths):
     # Prepare the source folder path for long path handling on Windows
     source_folder = get_long_path(source_folder)
     
     # Convert WSL paths to Windows paths if necessary
-    dbc_path = convert_wsl_to_windows_path(dbc_path)
-    dbc_path = get_long_path(dbc_path)
+    dbc_paths = [convert_wsl_to_windows_path(i) for i in dbc_paths]
+    dbc_paths = [get_long_path(i) for i in dbc_paths]
 
     # Collect all MF4 files in the source folder recursively
     mf4_files = [str(file) for file in Path(source_folder).rglob('*.mf4')]
@@ -106,10 +106,11 @@ def combine_and_decode_mf4(source_folder, dbc_path):
 
     # Setup database files dictionary for CAN bus
     database_files = {
-        "CAN": [(dbc_path, 0)],  # 0 specifies any bus channel
+        "CAN": [(i, 0) for i in dbc_paths],  # 0 specifies any bus channel
     }
+    print(database_files)
     
-    print(f"Decoding .mf4 files using: {dbc_path}")
+    print(f"Decoding .mf4 files using: {dbc_paths}")
     # Decode using the provided DBC file with extract_bus_logging
     combined_mdf = combined_mdf.extract_bus_logging(
         database_files=database_files,
@@ -118,7 +119,7 @@ def combine_and_decode_mf4(source_folder, dbc_path):
     )
 
     # Save the decoded MDF file
-    combined_mdf.save(output_mf4_path)
+    # combined_mdf.save(output_mf4_path)
 
     # Convert the MDF data to CSV with a normal timestamp format
     combined_mdf.export(fmt='csv', filename=output_csv_path, time_as_date=True)
@@ -131,8 +132,8 @@ def combine_and_decode_mf4(source_folder, dbc_path):
     rename_csv_files(decoded_folder)
 
     # Filter data of interest out of csv files and into a master csv file
-    print(f"Creating master.csv with filtered data of interest...")
-    process_csv_files(decoded_folder)
+    # print(f"Creating master.csv with filtered data of interest...")
+    # process_csv_files(decoded_folder)
 
     # Create subfolders for CSVs and plots
     csv_folder = os.path.join(decoded_folder, 'csv')
@@ -156,6 +157,6 @@ if __name__ == '__main__':
 
     # Check if the second argument (dbc_file) is provided
 
-    dbc_file = sys.argv[2]
+    dbc_files = sys.argv[2:]
 
-    combine_and_decode_mf4(source_folder, dbc_file)
+    combine_and_decode_mf4(source_folder, dbc_files)

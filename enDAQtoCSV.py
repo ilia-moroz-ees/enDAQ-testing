@@ -18,6 +18,7 @@ filename = sys.argv[1]
 
 path = filename
 
+print("Reading the file")
 doc = endaq.ide.get_doc(path)
 
 # Get All Data
@@ -25,12 +26,14 @@ data = {doc.channels[ch].name : endaq.ide.to_pandas(doc.channels[ch], time_mode=
 
 frames = [endaq.ide.to_pandas(doc.channels[ch], time_mode='seconds') for ch in doc.channels]
 
-
+print("Saving 25g CSV")
 try:
     frames[0].to_csv("25g.csv")
 except PermissionError:
     print("file is opened. Cannot override the file")
     sys.exit()
+
+print("Saving 40g CSV")
 
 try:
     frames[1].to_csv("40g.csv")
